@@ -21,8 +21,10 @@ public class Image {
     // The Imgur image id (or URL) to identify the image in Imgur's system
     private String imgurId;
     private String imgurUrl;
+    private String deleteHash;
+
     
-    // Optional: any additional metadata you want to store
+    // Additional information
     private String title;
     private String description;
     
@@ -35,9 +37,10 @@ public class Image {
     // Constructors
     public Image() {}
 
-    public Image(String imgurId, String imgurUrl, String title, String description, User user) {
+    public Image(String imgurId, String imgurUrl, String deleteHash, String title, String description, User user) {
         this.imgurId = imgurId;
         this.imgurUrl = imgurUrl;
+        this.deleteHash = deleteHash;
         this.title = title;
         this.description = description;
         this.user = user;
@@ -62,6 +65,14 @@ public class Image {
 
     public void setImgurUrl(String imgurUrl) {
         this.imgurUrl = imgurUrl;
+    }
+
+    public String getDeleteHash() {
+        return deleteHash;
+    }
+    
+    public void setDeleteHash(String deleteHash) {
+        this.deleteHash = deleteHash;
     }
 
     public String getTitle() {

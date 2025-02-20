@@ -17,7 +17,6 @@ public class UserService {
     
     // Registers a new user
     public User registerUser(User user) {
-        // Optionally, check for existing username, encrypt password, etc.
         return userRepository.save(user);
     }
     

@@ -25,7 +25,7 @@ public class UserController {
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
     
-    // Endpoint for user authentication (simple version)
+    // Endpoint for user authentication 
     @PostMapping("/login")
     public ResponseEntity<String> loginUser(@RequestBody User user) {
         User existingUser = userService.getUserByUsername(user.getUsername());

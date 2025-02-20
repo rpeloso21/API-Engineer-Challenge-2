@@ -24,9 +24,6 @@ public class User {
     private String password;
 
     // One user can have many images.
-    // CascadeType.ALL means that when a user is persisted or removed, 
-    // the associated images will be persisted/removed too.
-    // OrphanRemoval true ensures images removed from the list are deleted.
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Image> images = new ArrayList<>();
@@ -68,7 +65,6 @@ public class User {
         this.images = images;
     }
 
-    // Convenience methods to manage bidirectional relationship
     public void addImage(Image image) {
         images.add(image);
         image.setUser(this);
