@@ -2,11 +2,9 @@ package com.example.demo.controller;
 
 import com.example.demo.model.User;
 import com.example.demo.service.UserService;
-import com.example.demo.model.Image;
 import com.example.demo.service.ImageService;
 import com.example.demo.service.CustomUserDetailsService;
 import com.example.demo.util.JwtUtil;
-import com.example.demo.controller.LoginRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     
     private final UserService userService;
-    private final ImageService imageService;
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
     private final CustomUserDetailsService customUserDetailsService;
@@ -34,7 +31,6 @@ public class UserController {
                           CustomUserDetailsService customUserDetailsService,
                           PasswordEncoder passwordEncoder) {
         this.userService = userService;
-        this.imageService = imageService;
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
         this.customUserDetailsService = customUserDetailsService;

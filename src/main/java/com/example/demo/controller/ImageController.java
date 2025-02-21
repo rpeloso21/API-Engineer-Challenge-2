@@ -1,12 +1,7 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.User;
-import com.example.demo.service.UserService;
 import com.example.demo.model.Image;
 import com.example.demo.service.ImageService;
-import com.example.demo.service.CustomUserDetailsService;
-import com.example.demo.util.JwtUtil;
-import com.example.demo.controller.LoginRequest;
 
 import java.util.List;
 import java.util.Map;
@@ -14,35 +9,17 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.*;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/users")
 public class ImageController {
     
-    private final UserService userService;
     private final ImageService imageService;
-    private final AuthenticationManager authenticationManager;
-    private final JwtUtil jwtUtil;
-    private final CustomUserDetailsService customUserDetailsService;
-    private final PasswordEncoder passwordEncoder;
     
     @Autowired
-    public ImageController(UserService userService,
-                          ImageService imageService,
-                          AuthenticationManager authenticationManager,
-                          JwtUtil jwtUtil,
-                          CustomUserDetailsService customUserDetailsService,
-                          PasswordEncoder passwordEncoder) {
-        this.userService = userService;
+    public ImageController(ImageService imageService) {
         this.imageService = imageService;
-        this.authenticationManager = authenticationManager;
-        this.jwtUtil = jwtUtil;
-        this.customUserDetailsService = customUserDetailsService;
-        this.passwordEncoder = passwordEncoder;
     }
 
     // Upload an image and associate with userId (stores in Imgur and in H2 database)

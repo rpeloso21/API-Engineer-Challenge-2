@@ -30,7 +30,7 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable()) // Disable CSRF
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/users/register", "/api/users/login").permitAll() // Allow these without authentication
+                .requestMatchers("/api/users/register", "/api/users/login", "/h2-console/**").permitAll() // Allow these without authentication
                 .requestMatchers(HttpMethod.GET, "/api/images/**").authenticated()  // Allow authenticated users
                 .requestMatchers(HttpMethod.DELETE, "/api/images/**").authenticated() // Allow DELETE with authentication
                 .anyRequest().authenticated() // All other endpoints require authentication
