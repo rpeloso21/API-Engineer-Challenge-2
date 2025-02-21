@@ -2,9 +2,17 @@ package com.example.demo.controller;
 
 import com.example.demo.model.User;
 import com.example.demo.service.UserService;
+import com.example.demo.model.Image;
+import com.example.demo.service.ImageService;
+import com.example.demo.service.CustomUserDetailsService;
+import com.example.demo.util.JwtUtil;
+import com.example.demo.controller.LoginRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.*;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -12,26 +20,56 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     
     private final UserService userService;
+    private final ImageService imageService;
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtil jwtUtil;
+    private final CustomUserDetailsService customUserDetailsService;
+    private final PasswordEncoder passwordEncoder;
     
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService,
+                          ImageService imageService,
+                          AuthenticationManager authenticationManager,
+                          JwtUtil jwtUtil,
+                          CustomUserDetailsService customUserDetailsService,
+                          PasswordEncoder passwordEncoder) {
         this.userService = userService;
+        this.imageService = imageService;
+        this.authenticationManager = authenticationManager;
+        this.jwtUtil = jwtUtil;
+        this.customUserDetailsService = customUserDetailsService;
+        this.passwordEncoder = passwordEncoder;
     }
     
-    // Endpoint for user registration
+    // Registration endpoint - encodes the password before saving
     @PostMapping("/register")
     public ResponseEntity<User> registerUser(@RequestBody User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         User createdUser = userService.registerUser(user);
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
     
-    // Endpoint for user authentication 
+    // Login endpoint - authenticates the user and returns a JWT token
     @PostMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestBody User user) {
-        User existingUser = userService.getUserByUsername(user.getUsername());
-        if (existingUser != null && existingUser.getPassword().equals(user.getPassword())) {
-            return ResponseEntity.ok("Login successful");
+    public ResponseEntity<String> loginUser(@RequestBody LoginRequest loginRequest) {
+        try {
+            authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                    loginRequest.getUsername(), loginRequest.getPassword()
+                )
+            );
+        } catch (BadCredentialsException ex) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
         }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+        UserDetails userDetails = customUserDetailsService.loadUserByUsername(loginRequest.getUsername());
+        String token = jwtUtil.generateToken(userDetails.getUsername());
+        return ResponseEntity.ok(token);
+    }
+    
+    // Endpoint for viewing a user and their associated images
+    @GetMapping("/{userId}")
+    public ResponseEntity<User> getUser(@PathVariable Long userId) {
+        User user = userService.getUserById(userId);
+        return ResponseEntity.ok(user);
     }
 }
