@@ -17,6 +17,11 @@ public class UserService {
     
     // Registers a new user
     public User registerUser(User user) {
+
+        if (userRepository.findByUsername(user.getUsername()) != null) {
+            throw new IllegalArgumentException("Username already taken");
+        }
+
         return userRepository.save(user);
     }
     
