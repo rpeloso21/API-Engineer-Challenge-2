@@ -35,7 +35,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.DELETE, "/api/images/**").authenticated() // Allow DELETE with authentication
                 .anyRequest().authenticated() // All other endpoints require authentication
             )
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable())); // Allow H2 console to be displayed in an iframe
 
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
